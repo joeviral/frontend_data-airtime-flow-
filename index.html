@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Joetech — Data Share</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Welcome alert
+    window.addEventListener('load', () => {
+      alert('Welcome to Joetech Data Share Site');
+    });
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>Joetech Data Share</h1>
+      <p class="tagline">Fast • Reliable • Works on all networks — send airtime/data confirmations in seconds.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Send Data / Airtime Confirmation</h2>
+      <p>Enter the recipient's phone number, choose network and amount. You can edit any value before submitting.</p>
+
+      <form id="giftForm">
+        <label>Phone number
+          <input id="phone" name="phone" type="tel" placeholder="+2348012345678" required>
+        </label>
+
+        <label>Network
+          <select id="network" name="network">
+            <option value="MTN">MTN</option>
+            <option value="GLO">Glo</option>
+            <option value="AIRTEL">Airtel</option>
+            <option value="9MOBILE">9mobile</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <label>Amount (NGN)
+          <input id="amount" name="amount" type="number" min="1" value="100" required>
+        </label>
+
+        <label>Message (editable)
+          <textarea id="message" name="message" rows="3">You have successfully gifted data to the number</textarea>
+        </label>
+
+        <div class="actions">
+          <button type="submit" id="sendBtn">Send Confirmation</button>
+          <button type="button" id="previewBtn">Preview</button>
+        </div>
+      </form>
+
+      <div id="result" class="result" aria-live="polite"></div>
+    </section>
+
+    <section class="card">
+      <h3>Why use Joetech Data Share?</h3>
+      <p class="pitch">
+        Quick confirmations for customers and contacts — no airtime APIs required. Use this tool to log transfers,
+        create editable messages, and keep a record for review. Mobile-first design with pleasant colors for better conversion.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Joetech — right review @2025</p>
+      <p class="small">© Joetech — Built with care to convert visitors into customers.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
