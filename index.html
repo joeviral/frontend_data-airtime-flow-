@@ -1,47 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Joetech Data & Airtime Share</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Joetech — Data Share</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    window.addEventListener('load', () => {
+      alert('Welcome to Joetech Data Share Site');
+    });
+  </script>
 </head>
+
 <body>
+
+<header class="site-header">
   <div class="container">
-    <h1>Joetech Data / Airtime Share</h1>
+    <h1>Joetech Data Share</h1>
+    <p class="tagline">Fast • Reliable • Works on all networks.</p>
+  </div>
+</header>
 
-    <form id="shareForm">
-      <label>Phone number</label>
-      <input type="tel" id="phone" placeholder="+2348012345678" required />
+<main class="container">
 
-      <label>Network</label>
-      <select id="network">
-        <option value="MTN">MTN</option>
-        <option value="Airtel">Airtel</option>
-        <option value="Glo">Glo</option>
-        <option value="9mobile">9mobile</option>
-      </select>
+  <!-- =========================== -->
+  <!-- ABOUT SECTION -->
+  <!-- =========================== -->
+  <section class="card">
+    <h2>About This Airtime/Data Tool</h2>
+    <p>
+      This platform lets you generate **fake airtime/data confirmation messages**
+      for fun — perfect for pranking your friends.  
+      You can enter any phone number, network, and amount, then the system
+      will generate a **realistic SMS-style notification popup** as if airtime
+      or data was received.
+    </p>
+    <p>
+      This tool is ONLY for entertainment purposes — no real money or airtime
+      is sent.
+    </p>
+  </section>
 
-      <label>Amount (NGN)</label>
-      <input type="number" id="amount" placeholder="100" required />
+  <!-- =========================== -->
+  <!-- FORM SECTION -->
+  <!-- =========================== -->
+  <section class="card">
+    <h2>Send Data / Airtime Confirmation</h2>
 
-      <label>Message (editable)</label>
-      <textarea id="message">You have successfully gifted data to the number.</textarea>
+    <form id="giftForm">
+      <label>Phone number
+        <input id="phone" name="phone" type="tel" required>
+      </label>
 
-      <button type="submit" class="btn-main">Send Confirmation</button>
-      <button type="button" id="previewBtn" class="btn-preview">Preview</button>
+      <label>Network
+        <select id="network" name="network">
+          <option value="MTN">MTN</option>
+          <option value="GLO">Glo</option>
+          <option value="AIRTEL">Airtel</option>
+          <option value="9MOBILE">9mobile</option>
+        </select>
+      </label>
+
+      <label>Amount (NGN)
+        <input id="amount" name="amount" type="number" min="1" required>
+      </label>
+
+      <label>Message
+        <textarea id="message">You have successfully gifted data to the number</textarea>
+      </label>
+
+      <div class="actions">
+        <button type="submit" id="sendBtn">Send Confirmation</button>
+        <button type="button" id="previewBtn">Preview</button>
+      </div>
     </form>
-  </div>
 
-  <!-- Fake SMS Popup -->
-  <div id="fakeSmsPopup" class="sms-popup hidden">
-    <div class="sms-box">
-      <h3>New Message</h3>
-      <p id="smsText"></p>
-      <button onclick="closeSms()" class="close-btn">Close</button>
-    </div>
-  </div>
+    <div id="result" class="result"></div>
+  </section>
+</main>
 
-  <script src="app.js"></script>
+<!-- =========================== -->
+<!-- FAKE SMS POPUP -->
+<!-- =========================== -->
+<div id="fakeSmsPopup" class="sms-popup hidden">
+  <div class="sms-box">
+    <h3>New Message</h3>
+    <p id="smsText"></p>
+    <button class="close-btn" onclick="closeSms()">Close</button>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Joetech — right review @2025</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
 </body>
 </html>
