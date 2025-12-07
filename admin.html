@@ -1,55 +1,145 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Admin Login — Joetech</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Joetech Admin Dashboard</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+.dashboard{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+.card{
+  padding:15px;
+  background:#ffffff;
+  border-radius:10px;
+  margin-bottom:20px;
+  box-shadow:0px 2px 6px rgba(0,0,0,0.1);
+}
+input, select{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+}
+button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+}
+.history-item{
+  background:#f5f5f5;
+  padding:10px;
+  margin:8px 0;
+  border-radius:6px;
+}
+.logout{
+  background:red;
+  color:white;
+}
+</style>
 </head>
 <body>
-  <div class="container" style="padding-top:40px; max-width:420px">
-    <h2>Admin Login</h2>
-    <form id="loginForm">
-      <label>Username
-        <input id="username" name="username" required>
-      </label>
-      <label>Password
-        <input id="password" name="password" type="password" required>
-      </label>
-      <div class="actions">
-        <button type="submit">Login</button>
-      </div>
-    </form>
-    <p style="margin-top:18px"><a href="index.html">← Back to site</a></p>
+
+<div class="dashboard">
+  <h2>📊 Joetech Admin Dashboard</h2>
+  <button class="logout" onclick="logout()">Logout</button>
+
+  <div class="card">
+    <h3>Send Airtime</h3>
+    <select id="air_network">
+      <option value="MTN">MTN</option>
+      <option value="Airtel">Airtel</option>
+      <option value="Glo">Glo</option>
+      <option value="9mobile">9mobile</option>
+    </select>
+    <input id="air_phone" placeholder="Phone Number">
+    <input id="air_amount" placeholder="Amount">
+    <button onclick="sendAirtime()">Send Airtime</button>
   </div>
 
+  <div class="card">
+    <h3>Send Data</h3>
+    <select id="data_network">
+      <option value="MTN">MTN</option>
+      <option value="Airtel">Airtel</option>
+      <option value="Glo">Glo</option>
+      <option value="9mobile">9mobile</option>
+    </select>
+    <input id="data_phone" placeholder="Phone Number">
+    <input id="data_plan" placeholder="Data Plan (e.g 1GB)">
+    <button onclick="sendData()">Send Data</button>
+  </div>
+
+  <div class="card">
+    <h3>📜 Transaction History</h3>
+    <div id="history"></div>
+  </div>
+</div>
+
 <script>
-const API_BASE = "https://backend-datashare-1.onrender.com";  // YOUR LIVE BACKEND
+const API = "https://backend-datashare-1.onrender.com";
 
-const form = document.getElementById('loginForm');
+// check login
+if(!localStorage.getItem("admin_token")){
+  window.location = "login.html";
+}
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+function saveHistory(item){
+  let list = JSON.parse(localStorage.getItem("history") || "[]");
+  list.push(item);
+  localStorage.setItem("history", JSON.stringify(list));
+  loadHistory();
+}
 
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-
-  const res = await fetch(`${API_BASE}/api/admin/login`, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ username, password })
+function loadHistory(){
+  let list = JSON.parse(localStorage.getItem("history") || "[]");
+  const box = document.getElementById("history");
+  box.innerHTML = "";
+  list.forEach(i=>{
+    box.innerHTML += `<div class="history-item">📌 ${i}</div>`;
   });
+}
 
+loadHistory();
+
+async function sendAirtime(){
+  const network = document.getElementById("air_network").value;
+  const phone = document.getElementById("air_phone").value;
+  const amount = document.getElementById("air_amount").value;
+
+  const res = await fetch(`${API}/api/buy-airtime`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ network, phone, amount })
+  });
   const data = await res.json();
 
-  if (data.success) {
-    localStorage.setItem("adminToken", data.token);
-    alert("Login Successful!");
-    window.location = 'admin.html';
-  } else {
-    alert("Login failed: " + data.message);
-  }
-});
+  alert(data.message);
+  saveHistory(`Airtime: ${amount} to ${phone} (${network})`);
+}
+
+async function sendData(){
+  const network = document.getElementById("data_network").value;
+  const phone = document.getElementById("data_phone").value;
+  const plan = document.getElementById("data_plan").value;
+
+  const res = await fetch(`${API}/api/buy-data`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ network, phone, plan })
+  });
+  const data = await res.json();
+
+  alert(data.message);
+  saveHistory(`Data: ${plan} to ${phone} (${network})`);
+}
+
+function logout(){
+  localStorage.removeItem("admin_token");
+  window.location = "login.html";
+}
 </script>
 </body>
 </html>
