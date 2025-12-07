@@ -53,6 +53,14 @@
           <button type="button" id="previewBtn">Preview</button>
         </div>
       </form>
+      <!-- Fake SMS Popup -->
+<div id="fakeSmsPopup" class="sms-popup hidden">
+  <div class="sms-box">
+    <h3>New Message</h3>
+    <p id="smsText"></p>
+    <button onclick="closeSms()">Close</button>
+  </div>
+</div>
 
       <div id="result" class="result" aria-live="polite"></div>
       <div id="fakeAlert" style="display:none; margin-top:15px;"></div>
