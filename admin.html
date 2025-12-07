@@ -3,80 +3,53 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Admin — Joetech Data Share</title>
+<title>Admin Login — Joetech</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container" style="padding-top:24px">
-    <div style="display:flex; justify-content:space-between; align-items:center">
-      <h2>Admin — Entries</h2>
-      <div><button id="logoutBtn">Logout</button></div>
-    </div>
-    <p class="muted">Edit or delete recent entries.</p>
-    <div id="entries"></div>
+  <div class="container" style="padding-top:40px; max-width:420px">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <label>Username
+        <input id="username" name="username" required>
+      </label>
+      <label>Password
+        <input id="password" name="password" type="password" required>
+      </label>
+      <div class="actions">
+        <button type="submit">Login</button>
+      </div>
+    </form>
     <p style="margin-top:18px"><a href="index.html">← Back to site</a></p>
   </div>
 
 <script>
-async function checkAuth(){
-  const res = await fetch('/api/check-session');
-  if(!res.ok){
-    window.location = '/login.html';
-    return false;
-  }
-  return true;
-}
+const API_BASE = "https://backend-datashare-1.onrender.com";  // YOUR LIVE BACKEND
 
-async function fetchEntries(){
-  const res = await fetch('/api/entries');
-  const data = await res.json();
-  const el = document.getElementById('entries');
-  if(!data || data.length===0){ el.innerHTML = '<p>No entries yet.</p>'; return; }
-  el.innerHTML = '';
-  data.forEach(item => {
-    const node = document.createElement('div');
-    node.className = 'card';
-    node.innerHTML = `
-      <div><strong>\${item.phone}</strong> — \${item.network} — NGN \${item.amount}</div>
-      <div style="margin-top:8px">\${item.text}</div>
-      <div style="margin-top:10px">
-        <button onclick="edit('\${item.id}')">Edit</button>
-        <button onclick="del('\${item.id}')" style="background:transparent;color:var(--accent);border:1px solid rgba(255,255,255,0.04)">Delete</button>
-      </div>
-    `;
-    el.appendChild(node);
-  });
-}
+const form = document.getElementById('loginForm');
 
-async function edit(id){
-  const phone = prompt('New phone number:');
-  if(phone===null) return;
-  const amount = prompt('New amount:');
-  if(amount===null) return;
-  const message = prompt('New message:');
-  await fetch('/api/entries/' + id, {
-    method:'PUT',
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  const res = await fetch(`${API_BASE}/api/admin/login`, {
+    method:'POST',
     headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ phone, amount, message })
+    body: JSON.stringify({ username, password })
   });
-  fetchEntries();
-}
 
-async function del(id){
-  if(!confirm('Delete this entry?')) return;
-  await fetch('/api/entries/' + id, { method:'DELETE' });
-  fetchEntries();
-}
+  const data = await res.json();
 
-document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await fetch('/api/logout', { method:'POST' });
-  window.location = '/login.html';
+  if (data.success) {
+    localStorage.setItem("adminToken", data.token);
+    alert("Login Successful!");
+    window.location = 'admin.html';
+  } else {
+    alert("Login failed: " + data.message);
+  }
 });
-
-(async () => {
-  const ok = await checkAuth();
-  if(ok) fetchEntries();
-})();
 </script>
 </body>
 </html>
