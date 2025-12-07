@@ -82,19 +82,6 @@
     </div>
   </footer>
 
-  <script src="app.js">
-    function showFakeSms(phone, network, amount) {
-  const smsPopup = document.getElementById('fakeSmsPopup');
-  const smsText = document.getElementById('smsText');
-
-  smsText.textContent = `You have received ₦${amount} ${network} Airtime from ${phone}`;
-
-  smsPopup.classList.remove('hidden');
-}
-
-function closeSms() {
-  document.getElementById('fakeSmsPopup').classList.add('hidden');
-}
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
